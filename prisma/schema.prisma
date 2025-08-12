@@ -14,15 +14,15 @@ datasource db {
 }
 
 model Blog {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
 
-  authorId String @db.ObjectId
-  Author   User   @relation(fields: [authorId], references: [id])
-
-  title   String
-  slug    String @unique
-  content String
-
+  authorId  String   @db.ObjectId
+  Author    User     @relation(fields: [authorId], references: [id])
+  title     String
+  slug      String   @unique
+  content   String
+  image     String?  // Optional image URL or path
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
