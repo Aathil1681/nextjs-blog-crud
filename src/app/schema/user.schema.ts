@@ -1,71 +1,70 @@
 import { z } from "zod";
 
-const UserSchema = z.object({
+const userRegiterSchema = z.object({
   firstName: z
     .string()
-    .nonempty("First name is required")
-    .min(2, { message: "First name must be at least 2 characters long" })
-    .max(50, { message: "First name cannot exceed 50 characters" })
-    .trim()
-    .regex(/^[a-zA-Z\s-]+$/, {
-      message: "First name can only contain letters, spaces, and hyphens",
+    .nonempty("firstName is required")
+    .min(2, { message: "firstName should contain atleast 2 characters" })
+    .max(100, {
+      message: "firstName should not exceed more than 100 characters",
+    })
+    .regex(/^[a-zA-Z\d\s-]+$/, {
+      message: "firstName can only contain letters, numbers, space and hypine",
     }),
 
   lastName: z
     .string()
-    .nonempty("Last name is required")
-    .min(2, { message: "Last name must be at least 2 characters long" })
-    .max(50, { message: "Last name cannot exceed 50 characters" })
-    .trim()
-    .regex(/^[a-zA-Z\s-]+$/, {
-      message: "Last name can only contain letters, spaces, and hyphens",
+    .nonempty("lastName is required")
+    .min(2, { message: "lastName should contain atleast 2 characters" })
+    .max(100, {
+      message: "lastName should not exceed more than 100 characters",
+    })
+    .regex(/^[a-zA-Z\d\s-]+$/, {
+      message: "lastName can only contain letters, numbers, space and hypine",
     }),
 
   email: z
-    .email({ message: "Invalid email format" })
-    .min(1, "Email is required")
-    .max(255, { message: "Email cannot exceed 255 characters" })
-    .transform((val) => val.trim().toLowerCase()),
+    .string()
+    .nonempty("email id is required")
+    .email({ message: "invalid email format" })
+    .toLowerCase()
+    .trim()
+    .max(100, { message: "email id cannot have more than 100 characters" }),
 
   password: z
     .string()
-    .nonempty("Password is required")
-    .min(8, { message: "Password must be at least 8 characters long" })
-    .max(100, { message: "Password cannot exceed 100 characters" })
-    .refine((val) => /[A-Z]/.test(val), {
-      message: "Password must contain at least one uppercase letter",
-    })
+    .nonempty("password is required")
+    .min(8, { message: "password should contain atleast 8 characters" })
+    .trim()
     .refine((val) => /[a-z]/.test(val), {
-      message: "Password must contain at least one lowercase letter",
+      message: "password should contain atleast one lowercase letter",
     })
-    .refine((val) => /\d/.test(val), {
-      message: "Password must contain at least one number",
+    .refine((val) => /[A-Z]/.test(val), {
+      message: "password should contain atleast one uppercase letter",
+    })
+    .refine((val) => /[\d]/.test(val), {
+      message: "password should contain atleast one number",
     })
     .refine((val) => /[!@#$%^&*]/.test(val), {
-      message:
-        "Password must contain at least one special character (!@#$%^&*)",
+      message: "password should contain a special character",
     })
-    .refine((val) => /^[A-Za-z\d!@#$%^&*]+$/.test(val), {
-      message:
-        "Password can only contain letters, numbers, and special characters (!@#$%^&*)",
+    .refine((val) => /^[a-zA-Z\d!@#$%^&*]+$/.test(val), {
+      message: "password can contain only letters, numbers, special characters",
     }),
 });
 
-const UserQuerySchema = z.object({
-  page: z
+const userLoginSchema = z.object({
+  email: z
     .string()
-    .optional()
-    .transform((val) => (val ? parseInt(val, 10) : 1))
-    .refine((val) => !isNaN(val) && val > 0, {
-      message: "Page must be a positive number",
-    }),
-  size: z
+    .nonempty("email is required")
+    .email({ message: "invalid email format" })
+    .toLowerCase(),
+
+  password: z
     .string()
-    .optional()
-    .transform((val) => (val ? parseInt(val, 10) : 25))
-    .refine((val) => !isNaN(val) && val > 0, {
-      message: "Size must be a positive number",
-    }),
+    .nonempty("password is required")
+    .min(8, { message: "password should be atleast 8 characters" })
+    .trim(),
 });
 
-export { UserSchema, UserQuerySchema };
+export { userRegiterSchema, userLoginSchema };
